@@ -1,5 +1,6 @@
 package com.example.clean_arquitecture.infrastructure.entrypoints;
 
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,12 +22,13 @@ public class MovieRestController {
     private final MovieUseCase movieUseCase;
 
     @PostMapping
-    public ResponseEntity<MovieRequestDTO> save(@RequestBody MovieRequestDTO movieRequestDTO){
-        return ResponseEntity.ok(movieUseCase.save(movieRequestDTO));
+    public ResponseEntity<MovieRequestDTO> save(@RequestBody MovieRequestDTO movieRequestDTO) {
+        return ResponseEntity.status(HttpStatusCode.valueOf(201))
+                .body(movieUseCase.save(movieRequestDTO));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MovieRequestDTO> findById(@PathVariable Integer id){
+    public ResponseEntity<MovieRequestDTO> findById(@PathVariable Integer id) {
         try {
             return ResponseEntity.ok(movieUseCase.findById(id));
         } catch (MovieNotFoundException e) {
@@ -35,7 +37,7 @@ public class MovieRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id){
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
         movieUseCase.delete(id);
         return ResponseEntity.noContent().build();
     }
